@@ -1,27 +1,51 @@
 package reader
 
 import (
-	"fmt"
 	"log"
 
+	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/desc/protoparse"
+	"github.com/toumorokoshi/aep-sandbox/aepc/schema"
 )
 
-func ReadResourceFromProto(resourceFiles []string) {
+func ReadServiceFromProto(serviceFiles []string) (*schema.Service, error) {
 	// Create a new proto parser.
 	parser := protoparse.Parser{}
 
 	// Parse the proto file.
-	files, err := parser.ParseFiles(resourceFiles...)
+	files, err := parser.ParseFiles(serviceFiles...)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	resources := []schema.Resource{}
+	service := ""
+
 	for _, fd := range files {
+		// find all services
+		services := fd.GetServices()
+		for _, s := range services {
+			service = s.GetName()
+		}
 		// find all messages
-		resources := fd.GetMessageTypes()
-		for _, r := range resources {
-			fmt.Printf("%s", r.GetName())
+		messages := fd.GetMessageTypes()
+		for _, m := range messages {
+			r, err := MessageToResource(m)
+			if err != nil {
+				return nil, err
+			}
+			resources = append(resources, r)
 		}
 	}
+	return &schema.Service{
+		Name:      service,
+		Resources: resources,
+	}, nil
+}
+
+func MessageToResource(m *desc.MessageDescriptor) (schema.Resource, error) {
+	r := schema.Resource{
+		Kind: m.GetName(),
+	}
+	return r, nil
 }

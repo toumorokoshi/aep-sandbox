@@ -4,7 +4,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	reader "github.com/toumorokoshi/aep-sandbox/aepc/readers"
+	"github.com/toumorokoshi/aep-sandbox/aepc/reader"
+	writer "github.com/toumorokoshi/aep-sandbox/aepc/writers"
 )
 
 func NewCommand() *cobra.Command {
@@ -17,8 +18,11 @@ func NewCommand() *cobra.Command {
 		Long:  "aepc compiles resource representations to full proto rpcs",
 		Run: func(cmd *cobra.Command, args []string) {
 			// fmt.Printf("input: %s\n", inputFiles)
-			reader.ReadResourceFromProto(inputFiles)
-			fmt.Printf("output: %s", outputFile)
+			// TODO: error handling
+			service, _ := reader.ReadServiceFromProto(inputFiles)
+			proto, _ := writer.WriteServiceToProto(*service)
+			fmt.Printf("output file: %s\n", outputFile)
+			fmt.Printf("output proto: %s\n", proto)
 		},
 	}
 	c.Flags().StringSliceVarP(&inputFiles, "input", "i", []string{}, "input files with resource")

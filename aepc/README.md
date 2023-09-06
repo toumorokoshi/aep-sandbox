@@ -5,5 +5,5 @@ Generates AEP-compliant RPCs from proto messages.
 ## Example Usage
 
 ```
-go run aepc/main.go --input examples-service/resources.proto --output examples-service/generated/service.proto
+go run aepc/main.go --input example-service/resources.proto --output example-service/generated/service.proto
 ```
