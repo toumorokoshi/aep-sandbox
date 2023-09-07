@@ -8,7 +8,9 @@ The process is as follows:
 
 1. Author your resource definition via proto messages and `google.api` annotations.
 2. Generate the service proto from the resource proto via `aepc`
-3. Generate your service grpc code from the service proto via `protoc`
+3. Generate your service, grpc-gateway, and openapiv2 code from the service proto via `protoc`
+4. Convert the openapiv2 schema to openapiv3 with `swagger-codegen`
+5. Validate the schema with `spectral`
 
 ### Setup
 
