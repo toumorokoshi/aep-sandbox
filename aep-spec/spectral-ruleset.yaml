@@ -1,0 +1,8 @@
+rules:
+  resources-must-have-name:
+    description: a resource must have a name field
+    given: $.paths[*].post.responses.200.content[*].schema.properties[*]
+    then:
+      field: name
+      function: defined
+

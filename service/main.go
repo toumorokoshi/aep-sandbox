@@ -1,58 +1,46 @@
 package main
 
 import (
-	"log"
-	"net"
+	"context"
+	"flag"
+	"net/http"
 
+	"github.com/golang/glog"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	spb "github.com/toumorokoshi/aep-sandbox/service/proto"
-	"google.golang.org/genproto/googleapis/api/serviceconfig"
-	healthpb "google.golang.org/grpc/health/grpc_health_v1"
-	"larking.io/health"
-	"larking.io/larking"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
+var (
+	// command-line options:
+	// gRPC server endpoint
+	grpcServerEndpoint = flag.String("grpc-server-endpoint", "localhost:9090", "gRPC server endpoint")
+)
+
+func run() error {
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
+	// Register gRPC server endpoint
+	// Note: Make sure the gRPC server is running properly and accessible
+	mux := runtime.NewServeMux()
+	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+	err := spb.RegisterBookStoreHandlerFromEndpoint(ctx, mux, *grpcServerEndpoint, opts)
+	if err != nil {
+		return err
+	}
+
+	// Start HTTP server (and proxy calls to gRPC server endpoint)
+	return http.ListenAndServe(":8081", mux)
+}
+
 func main() {
-	// Create a health service. The health service is used to check the status
-	// of services running within the server.
-	healthSvc := health.NewServer()
-	healthSvc.SetServingStatus("example.up.Service", healthpb.HealthCheckResponse_SERVING)
-	healthSvc.SetServingStatus("example.down.Service", healthpb.HealthCheckResponse_NOT_SERVING)
+	flag.Parse()
+	defer glog.Flush()
 
-	serviceConfig := &serviceconfig.Service{}
-	// AddHealthz adds a /v1/healthz endpoint to the service binding to the
-	// grpc.health.v1.Health service:
-	//   - get /v1/healthz -> grpc.health.v1.Health.Check
-	//   - websocket /v1/healthz -> grpc.health.v1.Health.Watch
-	health.AddHealthz(serviceConfig)
-
-	// Mux impements http.Handler and serves both gRPC and HTTP connections.
-	mux, err := larking.NewMux(
-		larking.ServiceConfigOption(serviceConfig),
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// RegisterHealthServer registers a HealthServer to the mux.
-	healthpb.RegisterHealthServer(mux, healthSvc)
-	spb.RegisterBookStoreServer(mux, &BookStoreServer{})
-
-	// Server creates a *http.Server.
-	svr, err := larking.NewServer(mux)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Listen on TCP port 8080 on all interfaces.
-	lis, err := net.Listen("tcp", "localhost:8080")
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-	defer lis.Close()
-
-	// Serve starts the server and blocks until the server stops.
-	// http://localhost:8080/v1/healthz
-	log.Println("gRPC & HTTP server listening on", lis.Addr())
-	if err := svr.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+	if err := run(); err != nil {
+		glog.Fatal(err)
 	}
 }

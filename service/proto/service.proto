@@ -5,13 +5,27 @@ syntax = "proto3";
 package exampleservice;
 option go_package = "github.com/toumorokoshi/aep-sandbox/example-service/proto";
 
+import "google/api/annotations.proto";
+import "google/api/resource.proto";
+
 service BookStore {
-  rpc CreateBook(CreateBookRequest) returns (Book) {}
+  rpc CreateBook(CreateBookRequest) returns (Book) {
+    option (google.api.http) = {
+      post : "/book"
+    };
+  }
 }
 
 message CreateBookRequest {}
 
 message Book {
+  option (google.api.resource) = {
+    // TODO: we shouldn't need to call it "book_id": it's
+    // obvious from the book.
+    // perhaps we remove the pattern altogether by instead expressing
+    // paths as a relationship between parent and child resources.
+    pattern : "/book/{book_id}"
+  };
   message Properties {}
   message Status {}
 
