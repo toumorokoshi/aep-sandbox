@@ -20,7 +20,7 @@ func NewCommand() *cobra.Command {
 			// fmt.Printf("input: %s\n", inputFiles)
 			// TODO: error handling
 			service, _ := reader.ReadServiceFromProto(inputFiles)
-			proto, _ := writer.WriteServiceToProto(*service)
+			proto, _ := writer.WriteServiceToProto2(*service)
 			fmt.Printf("output file: %s\n", outputFile)
 			fmt.Printf("output proto: %s\n", proto)
 		},

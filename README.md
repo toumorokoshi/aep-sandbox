@@ -38,6 +38,12 @@ To use the spec validator, install spectral:
 npm install -g @stoplight/spectral-cli
 ```
 
+### Generate the full service proto
+
+```
+go run aepc/main.go -i service/proto/resources.proto -o service/proto/service2.proto
+```
+
 ### Generate service code
 
 ```bash

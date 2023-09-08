@@ -2,13 +2,15 @@
 
 ```mermaid
 graph TD
-    resource("resources (proto messages)")
+    resource("resource definitions in resource.proto")
+    serviceProto("fully defined service in service.proto")
     gService("gRPC service")
-    httpService("HTTP service")
+    httpService("HTTP -> gRPC gateway")
     OpenAPI("OpenAPI Definition")
     client("Client")
-    resource -- aepc --> gService
-    gService -- "larking (final solution TBD)" --> httpService
-    httpService --> OpenAPI
+    resource -- aepc --> serviceProto
+    serviceProto -- protoc --> gService
+    serviceProto -- protoc --> httpService
+    httpService -- protoc --> OpenAPI
     OpenAPI -- openapi-generator et al --> client
 ```
