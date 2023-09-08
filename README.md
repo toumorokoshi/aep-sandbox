@@ -77,3 +77,17 @@ APIs authored via other means (e.g. a web framework like Flask).
 ```
 spectral lint openapi/openapi.json --ruleset aep-spec/spectral-ruleset.yaml
 ```
+
+### Starting the servers
+
+Starting the servers require both the service and the
+gateway to be up. In two different shells:
+
+
+```bash
+go run service/*.go
+```
+
+```bash
+go run gateway/*.go
+```

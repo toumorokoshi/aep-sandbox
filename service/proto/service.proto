@@ -14,9 +14,17 @@ service BookStore {
       post : "/book"
     };
   }
+
+  rpc GetBook(GetBookRequest) returns (Book) {
+    option (google.api.http) = {
+      get : "/book/{id}"
+    };
+  }
 }
 
 message CreateBookRequest {}
+
+message GetBookRequest { string id = 1; }
 
 message Book {
   option (google.api.resource) = {
