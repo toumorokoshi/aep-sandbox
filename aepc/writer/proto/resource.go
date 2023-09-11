@@ -22,30 +22,10 @@ func AddResource(r schema.Resource, fb *builder.FileBuilder, sb *builder.Service
 	if err != nil {
 		return err
 	}
-	return nil
-}
-
-func AddCreate(r schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
-	// add the resource message
-	// create request messages
-	mb := builder.NewMessage("Create" + r.Kind + "Request")
-	mb.AddField(
-		builder.NewField(FIELD_NAME_ID, builder.FieldTypeString()).SetNumber(1),
-	)
-	fb.AddMessage(mb)
-	// method := builder.NewMethod("Create"+r.Kind, rpcmb, resourceMb)
-	method := builder.NewMethod("Create"+r.Kind,
-		builder.RpcTypeMessage(mb, false),
-		builder.RpcTypeMessage(resourceMb, false),
-	)
-	options := &descriptorpb.MethodOptions{}
-	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
-		Pattern: &annotations.HttpRule_Post{
-			Post: "/" + strings.ToLower(r.Kind) + "/{id}",
-		},
-	})
-	method.SetOptions(options)
-	sb.AddMethod(method)
+	err = AddRead(r, resourceMb, fb, sb)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -66,4 +46,52 @@ func GeneratedResourceMessage(r schema.Resource) (*builder.MessageBuilder, error
 	// 	builder.NewExtension("google.api.http", tag int32, typ *builder.FieldType, extendee *builder.MessageBuilder)
 	// )
 	return mb, nil
+}
+
+func AddCreate(r schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+	// add the resource message
+	// create request messages
+	mb := builder.NewMessage("Create" + r.Kind + "Request")
+	mb.AddField(
+		builder.NewField(FIELD_NAME_ID, builder.FieldTypeString()).SetNumber(1),
+	)
+	fb.AddMessage(mb)
+	// method := builder.NewMethod("Create"+r.Kind, rpcmb, resourceMb)
+	method := builder.NewMethod("Create"+r.Kind,
+		builder.RpcTypeMessage(mb, false),
+		builder.RpcTypeMessage(resourceMb, false),
+	)
+	options := &descriptorpb.MethodOptions{}
+	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
+		Pattern: &annotations.HttpRule_Post{
+			Post: "/" + strings.ToLower(r.Kind),
+		},
+	})
+	method.SetOptions(options)
+	sb.AddMethod(method)
+	return nil
+}
+
+func AddRead(r schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+	// add the resource message
+	// create request messages
+	mb := builder.NewMessage("Read" + r.Kind + "Request")
+	mb.AddField(
+		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
+	)
+	fb.AddMessage(mb)
+	// method := builder.NewMethod("Create"+r.Kind, rpcmb, resourceMb)
+	method := builder.NewMethod("Read"+r.Kind,
+		builder.RpcTypeMessage(mb, false),
+		builder.RpcTypeMessage(resourceMb, false),
+	)
+	options := &descriptorpb.MethodOptions{}
+	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
+		Pattern: &annotations.HttpRule_Post{
+			Post: "/" + strings.ToLower(r.Kind) + "/{id}",
+		},
+	})
+	method.SetOptions(options)
+	sb.AddMethod(method)
+	return nil
 }

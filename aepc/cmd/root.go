@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/toumorokoshi/aep-sandbox/aepc/reader"
@@ -21,6 +23,20 @@ func NewCommand() *cobra.Command {
 			// TODO: error handling
 			service, _ := reader.ReadServiceFromProto(inputFiles)
 			proto, _ := proto.WriteServiceToProto(*service)
+			f, err := os.OpenFile(outputFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+			if err != nil {
+				log.Fatal(err)
+			}
+			bytesWritten, err := f.Write(proto)
+			log.Printf("%v", bytesWritten)
+			if err != nil {
+				log.Fatal(err)
+			}
+			err = f.Close()
+			if err != nil {
+				log.Fatal(err)
+			}
+
 			fmt.Printf("output file: %s\n", outputFile)
 			fmt.Printf("output proto: %s\n", proto)
 		},
