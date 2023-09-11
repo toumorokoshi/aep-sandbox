@@ -1,6 +1,2 @@
-*.pb.go
-*.pb.gw.go
-service.swagger.json
-openapi
 # ignore build jars like swagger-codegen
 *.jar

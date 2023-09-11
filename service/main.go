@@ -6,7 +6,7 @@ import (
 	"log"
 	"net"
 
-	spb "github.com/toumorokoshi/aep-sandbox/service/proto"
+	bpb "github.com/toumorokoshi/aep-sandbox/service/bookstore"
 	"google.golang.org/grpc"
 )
 
@@ -21,7 +21,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	spb.RegisterBookStoreServer(s, NewBookStoreServer())
+	bpb.RegisterBookStoreServer(s, NewBookStoreServer())
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

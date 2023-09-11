@@ -1,6 +1,6 @@
 syntax = "proto3";
 package tutorial;
-option go_package = "github.com/toumorokoshi/aep-sandbox/example-service/generated";
+option go_package = "proto";
 
 service BookStore {}
 

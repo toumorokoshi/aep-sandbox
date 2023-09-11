@@ -1,17 +1,19 @@
-syntax = "proto2";
+syntax = "proto3";
 
 import "google/api/annotations.proto";
 
+option go_package = "/bookstore";
+
 message Book {
-  optional string path = 1;
+  string path = 1;
 }
 
 message CreateBookRequest {
-  optional string id = 1;
+  string id = 1;
 }
 
 message ReadBookRequest {
-  optional string path = 1;
+  string path = 1;
 }
 
 service BookStore {
@@ -20,6 +22,6 @@ service BookStore {
   }
 
   rpc ReadBook ( ReadBookRequest ) returns ( Book ) {
-    option (google.api.http) = { post: "/book/{id}" };
+    option (google.api.http) = { post: "/{path}" };
   }
 }
