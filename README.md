@@ -1,6 +1,7 @@
 # aep-sandbox
 @toumorokoshi's sandbox for aep.dev-related projects.
 
+Also see [DESIGN.md](./DESIGN.md)
 
 ## User Guide
 
@@ -38,36 +39,25 @@ To use the spec validator, install spectral:
 npm install -g @stoplight/spectral-cli
 ```
 
-### Generate the full service proto
+### Generated proto files and OpenAPI specification
 
-```
-go run aepc/main.go -i service/proto/resources.proto -o service/proto/service2.proto
-```
+See [scripts/regenerate-all.sh](./scripts/regenerate-all.sh).
 
-### Generate service code
-
-```bash
-protoc \
-  -I=./googleapis/ -I=./service/proto/ \
-  --go_out=service/proto --go-grpc_out=service/proto --grpc-gateway_out=service/proto \
-  --go_opt paths=source_relative --go-grpc_opt paths=source_relative \
-  --grpc-gateway_opt paths=source_relative \
-  service/proto/service.proto
-```
-
-### Start Services
+### Starting the servers
 
 In this design, there is a
 [grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) that handles the
 HTTP bindings and OpenAPI specification. So both must be started.
 
-### Generating OpenAPIV3
+In two different shells:
 
-Since grpc-gateway doesn't support OpenAPIV3 directly, we write OpenAPIV2
-(swagger) and convert it to OpenAPIV3.
 
+```bash
+go run service/*.go
 ```
-java -jar swagger-codegen-cli.jar generate -l openapi -i service.swagger.json -o openapi
+
+```bash
+go run gateway/*.go
 ```
 
 ### Validate API Schema via Spectral
@@ -82,18 +72,4 @@ APIs authored via other means (e.g. a web framework like Flask).
 
 ```
 spectral lint openapi/openapi.json --ruleset aep-spec/spectral-ruleset.yaml
-```
-
-### Starting the servers
-
-Starting the servers require both the service and the
-gateway to be up. In two different shells:
-
-
-```bash
-go run service/*.go
-```
-
-```bash
-go run gateway/*.go
 ```

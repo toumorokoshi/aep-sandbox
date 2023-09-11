@@ -1,4 +1,7 @@
+# aep-sandbox design
 
+The following diagram represents the components in both the generation and
+runtime of services built on the the aep toolkit.
 
 ```mermaid
 graph TD
