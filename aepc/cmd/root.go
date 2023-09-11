@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/toumorokoshi/aep-sandbox/aepc/reader"
-	writer "github.com/toumorokoshi/aep-sandbox/aepc/writers"
+	"github.com/toumorokoshi/aep-sandbox/aepc/writer/proto"
 )
 
 func NewCommand() *cobra.Command {
@@ -20,7 +20,7 @@ func NewCommand() *cobra.Command {
 			// fmt.Printf("input: %s\n", inputFiles)
 			// TODO: error handling
 			service, _ := reader.ReadServiceFromProto(inputFiles)
-			proto, _ := writer.WriteServiceToProto2(*service)
+			proto, _ := proto.WriteServiceToProto(*service)
 			fmt.Printf("output file: %s\n", outputFile)
 			fmt.Printf("output proto: %s\n", proto)
 		},
