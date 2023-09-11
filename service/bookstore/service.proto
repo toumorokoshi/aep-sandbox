@@ -22,6 +22,6 @@ service BookStore {
   }
 
   rpc ReadBook ( ReadBookRequest ) returns ( Book ) {
-    option (google.api.http) = { post: "/{path}" };
+    option (google.api.http) = { get: "/{path=book/*}" };
   }
 }

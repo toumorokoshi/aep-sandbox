@@ -87,9 +87,8 @@ func AddRead(r schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.
 	)
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
-		Pattern: &annotations.HttpRule_Post{
-			// Post: "/" + strings.ToLower(r.Kind) + "/{id}",
-			Post: "/{path}",
+		Pattern: &annotations.HttpRule_Get{
+			Get: fmt.Sprintf("/{path=%s/*}", strings.ToLower(r.Kind)),
 		},
 	})
 	method.SetOptions(options)

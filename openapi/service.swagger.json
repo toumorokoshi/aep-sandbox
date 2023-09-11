@@ -47,7 +47,7 @@
       }
     },
     "/{path}": {
-      "post": {
+      "get": {
         "operationId": "BookStore_ReadBook",
         "responses": {
           "200": {
@@ -68,7 +68,8 @@
             "name": "path",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "book/[^/]+"
           }
         ],
         "tags": [

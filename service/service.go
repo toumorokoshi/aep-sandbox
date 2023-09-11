@@ -18,6 +18,8 @@ func (BookStoreServer) CreateBook(context.Context, *bpb.CreateBookRequest) (*bpb
 	return &bpb.Book{}, nil
 }
 
-func (BookStoreServer) ReadBook(context.Context, *bpb.ReadBookRequest) (*bpb.Book, error) {
-	return &bpb.Book{}, nil
+func (BookStoreServer) ReadBook(c context.Context, r *bpb.ReadBookRequest) (*bpb.Book, error) {
+	return &bpb.Book{
+		Path: r.Path,
+	}, nil
 }

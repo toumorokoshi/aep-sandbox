@@ -150,7 +150,7 @@ func RegisterBookStoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 
 	})
 
-	mux.Handle("POST", pattern_BookStore_ReadBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BookStore_ReadBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -158,7 +158,7 @@ func RegisterBookStoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.BookStore/ReadBook", runtime.WithHTTPPathPattern("/{path}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.BookStore/ReadBook", runtime.WithHTTPPathPattern("/{path=book/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -238,13 +238,13 @@ func RegisterBookStoreHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 
 	})
 
-	mux.Handle("POST", pattern_BookStore_ReadBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BookStore_ReadBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.BookStore/ReadBook", runtime.WithHTTPPathPattern("/{path}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.BookStore/ReadBook", runtime.WithHTTPPathPattern("/{path=book/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -266,7 +266,7 @@ func RegisterBookStoreHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 var (
 	pattern_BookStore_CreateBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"book"}, ""))
 
-	pattern_BookStore_ReadBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{1, 0, 4, 1, 5, 0}, []string{"path"}, ""))
+	pattern_BookStore_ReadBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"book", "path"}, ""))
 )
 
 var (
