@@ -85,6 +85,14 @@ Read methods:
 - **MUST** use the HTTP `GET` method.
 - **MUST** have an HTTP path identical to the resource path.
 
+##### Read Request
+
+The read request **must** support the following fields:
+
+| Field Name | HTTP field type | type   | description                              |
+| ---------- | --------------- | ------ | ---------------------------------------- |
+| version    | query parameter | string | the version of the resource to retrieve. |
+
 #### Apply
 
 Apply methods:

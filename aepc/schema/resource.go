@@ -16,4 +16,15 @@ type Resource struct {
 }
 
 type Property struct {
+	// Number represents the field number, identical to the usage
+	// of the number in protobuf.
+	Number int
 }
+
+type FieldType int64
+
+const (
+	String FieldType = iota
+	Number
+	Object
+)
