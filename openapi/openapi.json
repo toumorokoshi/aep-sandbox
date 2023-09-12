@@ -24,6 +24,15 @@
           "schema" : {
             "type" : "string"
           }
+        }, {
+          "name" : "resource.path",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
         } ],
         "responses" : {
           "200" : {

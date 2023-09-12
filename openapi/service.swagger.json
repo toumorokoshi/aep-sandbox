@@ -39,6 +39,12 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "resource.path",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [

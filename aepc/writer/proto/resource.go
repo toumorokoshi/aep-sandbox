@@ -52,9 +52,8 @@ func AddCreate(r schema.Resource, resourceMb *builder.MessageBuilder, fb *builde
 	// add the resource message
 	// create request messages
 	mb := builder.NewMessage("Create" + r.Kind + "Request")
-	mb.AddField(
-		builder.NewField(FIELD_NAME_ID, builder.FieldTypeString()).SetNumber(1),
-	)
+	mb.AddField(builder.NewField(FIELD_NAME_ID, builder.FieldTypeString()).SetNumber(1))
+	mb.AddField(builder.NewField(FIELD_NAME_RESOURCE, builder.FieldTypeMessage(resourceMb)).SetNumber(2))
 	fb.AddMessage(mb)
 	// method := builder.NewMethod("Create"+r.Kind, rpcmb, resourceMb)
 	method := builder.NewMethod("Create"+r.Kind,

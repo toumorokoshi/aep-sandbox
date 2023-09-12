@@ -10,6 +10,8 @@ message Book {
 
 message CreateBookRequest {
   string id = 1;
+
+  Book resource = 2;
 }
 
 message ReadBookRequest {
