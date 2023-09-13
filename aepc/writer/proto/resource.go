@@ -12,7 +12,7 @@ import (
 )
 
 // AddResource adds a resource's protos and RPCs to a file and service.
-func AddResource(r schema.Resource, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+func AddResource(r *schema.Resource, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	resourceMb, err := GeneratedResourceMessage(r)
 	if err != nil {
 		return fmt.Errorf("unable to generated resource %v: %w", r.Kind, err)
@@ -34,7 +34,7 @@ func AddResource(r schema.Resource, fb *builder.FileBuilder, sb *builder.Service
 }
 
 // GenerateResourceMesssage adds the resource message.
-func GeneratedResourceMessage(r schema.Resource) (*builder.MessageBuilder, error) {
+func GeneratedResourceMessage(r *schema.Resource) (*builder.MessageBuilder, error) {
 	mb := builder.NewMessage(r.Kind)
 	mb.AddField(
 		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
@@ -52,7 +52,7 @@ func GeneratedResourceMessage(r schema.Resource) (*builder.MessageBuilder, error
 	return mb, nil
 }
 
-func AddCreate(r schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+func AddCreate(r *schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	// add the resource message
 	// create request messages
 	mb := builder.NewMessage("Create" + r.Kind + "Request")
@@ -74,7 +74,7 @@ func AddCreate(r schema.Resource, resourceMb *builder.MessageBuilder, fb *builde
 	return nil
 }
 
-func AddRead(r schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+func AddRead(r *schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	// add the resource message
 	// create request messages
 	mb := builder.NewMessage("Read" + r.Kind + "Request")
@@ -97,7 +97,7 @@ func AddRead(r schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.
 	return nil
 }
 
-func AddDelete(r schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+func AddDelete(r *schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	// add the resource message
 	// create request messages
 	mb := builder.NewMessage("Delete" + r.Kind + "Request")

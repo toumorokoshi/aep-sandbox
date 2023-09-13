@@ -14,5 +14,3 @@ message Book {
   Properties properties = 1;
   Status status = 2;
 }
-
-message Author {}

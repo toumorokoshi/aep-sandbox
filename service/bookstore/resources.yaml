@@ -1,0 +1,6 @@
+name: NewBookStore
+resources:
+  - kind: book
+    methods:
+      - type: "CREATE"
+        is_lro: false

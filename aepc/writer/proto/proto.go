@@ -11,7 +11,7 @@ import (
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
-func WriteServiceToProto(s schema.Service) ([]byte, error) {
+func WriteServiceToProto(s *schema.Service) ([]byte, error) {
 	fb := builder.NewFile("test.proto")
 	fb.IsProto3 = true
 	fb.SetComments(builder.Comments{

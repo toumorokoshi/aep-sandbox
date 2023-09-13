@@ -8,43 +8,47 @@ import (
 	"github.com/toumorokoshi/aep-sandbox/aepc/schema"
 )
 
-func ReadServiceFromProto(serviceFiles []string) (*schema.Service, error) {
+const resourcesFile = "resources.proto"
+
+func ReadServiceFromProto(b []byte, s *schema.Service) error {
 	// Create a new proto parser.
-	parser := protoparse.Parser{}
+	accessor := protoparse.FileContentsFromMap(map[string]string{
+		resourcesFile: string(b),
+	})
+	parser := protoparse.Parser{
+		Accessor: accessor,
+	}
 
 	// Parse the proto file.
-	files, err := parser.ParseFiles(serviceFiles...)
+	files, err := parser.ParseFiles(resourcesFile)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	resources := []schema.Resource{}
-	service := ""
+	resources := []*schema.Resource{}
 
 	for _, fd := range files {
 		// find all services
 		services := fd.GetServices()
-		for _, s := range services {
-			service = s.GetName()
+		for _, protoS := range services {
+			s.Name = protoS.GetName()
 		}
 		// find all messages
 		messages := fd.GetMessageTypes()
 		for _, m := range messages {
 			r, err := MessageToResource(m)
 			if err != nil {
-				return nil, err
+				return nil
 			}
 			resources = append(resources, r)
 		}
 	}
-	return &schema.Service{
-		Name:      service,
-		Resources: resources,
-	}, nil
+	s.Resources = resources
+	return nil
 }
 
-func MessageToResource(m *desc.MessageDescriptor) (schema.Resource, error) {
-	r := schema.Resource{
+func MessageToResource(m *desc.MessageDescriptor) (*schema.Resource, error) {
+	r := &schema.Resource{
 		Kind: m.GetName(),
 	}
 	return r, nil
