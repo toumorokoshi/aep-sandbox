@@ -26,6 +26,10 @@ func AddResource(r schema.Resource, fb *builder.FileBuilder, sb *builder.Service
 	if err != nil {
 		return err
 	}
+	// err = AddDelete(r, resourceMb, fb, sb)
+	// if err != nil {
+	// 	return err
+	// }
 	return nil
 }
 
@@ -55,7 +59,6 @@ func AddCreate(r schema.Resource, resourceMb *builder.MessageBuilder, fb *builde
 	mb.AddField(builder.NewField(FIELD_NAME_ID, builder.FieldTypeString()).SetNumber(1))
 	mb.AddField(builder.NewField(FIELD_NAME_RESOURCE, builder.FieldTypeMessage(resourceMb)).SetNumber(2))
 	fb.AddMessage(mb)
-	// method := builder.NewMethod("Create"+r.Kind, rpcmb, resourceMb)
 	method := builder.NewMethod("Create"+r.Kind,
 		builder.RpcTypeMessage(mb, false),
 		builder.RpcTypeMessage(resourceMb, false),
@@ -79,7 +82,6 @@ func AddRead(r schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.
 		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
 	)
 	fb.AddMessage(mb)
-	// method := builder.NewMethod("Create"+r.Kind, rpcmb, resourceMb)
 	method := builder.NewMethod("Read"+r.Kind,
 		builder.RpcTypeMessage(mb, false),
 		builder.RpcTypeMessage(resourceMb, false),
@@ -88,6 +90,29 @@ func AddRead(r schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Get{
 			Get: fmt.Sprintf("/{path=%s/*}", strings.ToLower(r.Kind)),
+		},
+	})
+	method.SetOptions(options)
+	sb.AddMethod(method)
+	return nil
+}
+
+func AddDelete(r schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+	// add the resource message
+	// create request messages
+	mb := builder.NewMessage("Delete" + r.Kind + "Request")
+	mb.AddField(
+		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
+	)
+	fb.AddMessage(mb)
+	method := builder.NewMethod("Delete"+r.Kind,
+		builder.RpcTypeMessage(mb, false),
+		builder.RpcTypeMessage(nil, false),
+	)
+	options := &descriptorpb.MethodOptions{}
+	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
+		Pattern: &annotations.HttpRule_Delete{
+			Delete: fmt.Sprintf("/{path=%s/*}", strings.ToLower(r.Kind)),
 		},
 	})
 	method.SetOptions(options)
