@@ -16,23 +16,24 @@ message Resource {
   // Kind is the type of the resource
   string kind = 1;
   map<string, Property> properties = 2;
-  repeated Method methods = 3;
+  // TODO: add method support
+  // repeated Method methods = 3;
 }
 
 message Property {}
 
-message Method {
-  enum MethodType {
-    METHODTYPE_UNDEFINED = 0;
-    CREATE = 1;
-    READ = 2;
-    UPDATE = 3;
-    DELETE = 4;
-    LIST = 5;
-    CUSTOM_MUTATION = 6;
-    CUSTOM_RETRIEVAL = 7;
-  }
-
-  MethodType type = 1;
-  bool is_lro = 2;
-}
+// message Method {
+//   enum MethodType {
+//     METHODTYPE_UNDEFINED = 0;
+//     CREATE = 1;
+//     READ = 2;
+//     UPDATE = 3;
+//     DELETE = 4;
+//     LIST = 5;
+//     CUSTOM_MUTATION = 6;
+//     CUSTOM_RETRIEVAL = 7;
+//   }
+//
+//   MethodType type = 1;
+//   bool is_lro = 2;
+// }

@@ -4,6 +4,8 @@
 # correct sequence to ensure all files pick up
 # changes from their upstreams.
 set -ex
+# regenerate resourcedefinition proto
+protoc ./aepc/schema/resourcedefinition.proto --go_opt paths=source_relative --go_out=.
 # generate service proto from resource proto
 go run aepc/main.go -i service/bookstore/resources.proto -o service/bookstore/service.proto
 # generated all downstream proto code
